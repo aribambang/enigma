@@ -2,8 +2,9 @@ package app
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
+
+	"github.com/aribambang/enigma/banking/service"
 )
 
 type Customer struct {
@@ -12,15 +13,12 @@ type Customer struct {
 	PostalCode int    `json:"postal_code"`
 }
 
-func greet(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "Hello World!")
+type CustomerHandlers struct {
+	service service.CustomerService
 }
 
-func getAllCustomers(w http.ResponseWriter, r *http.Request) {
-	customers := []Customer{
-		{"Ari", "Bekasi", 17411},
-		{"Bambang", "Bekasi", 17156},
-	}
+func (ch *CustomerHandlers) getAllCustomers(w http.ResponseWriter, r *http.Request) {
+	customers, _ := ch.service.GetAllCustomer()
 
 	w.Header().Add("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(customers)
